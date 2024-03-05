@@ -54,3 +54,9 @@ knife4j:
 # log config
 logging:
   config: classpath:logback.xml
+
+jwt:
+  accessTokenExpiration: 30
+  refreshTokenExpiration: 40
+  accessTokenSecret: "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDR7"
+  refreshTokenSecret: "9dr6vsnXbZ/JjR3P07fu5m+Ysj0cArxlVVcJxNeDTMPswoICjN4Ho6RhXh"

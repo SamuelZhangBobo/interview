@@ -7,5 +7,5 @@ public interface UserService {
 
     Boolean register(UserDto registry);
 
-    UserDetailVo login(UserDto id);
+    UserDetailVo login(UserDto login);
 }

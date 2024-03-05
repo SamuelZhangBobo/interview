@@ -7,7 +7,8 @@ import java.util.List;
 
 public interface UserRepo {
 
-    List<UserDetailVo> getAccount(List<String> userName);
+    UserPo getAccount(String userName);
     void insertAccount(UserPo account);
+    void updateAccount(UserPo account);
     void refreshToken(String userName, String token, String refreshToken, String salt);
 }

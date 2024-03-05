@@ -17,13 +17,18 @@ public class UserRepoImpl implements UserRepo {
     private UserMapper userMapper;
 
     @Override
-    public List<UserDetailVo> getAccount(List<String> userName) {
+    public UserPo getAccount(String userName) {
         return userMapper.getAccount(userName);
     }
 
     @Override
     public void insertAccount(UserPo account) {
         userMapper.insertAccount(account);
+    }
+
+    @Override
+    public void updateAccount(UserPo account) {
+        userMapper.updateAccount(account);
     }
 
     @Override

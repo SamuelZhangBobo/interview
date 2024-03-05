@@ -1,46 +1,27 @@
 package com.align.domain.entity;
 
-import com.align.controller.vo.UserDetailVo;
-import com.align.domain.config.JwtConfigProperties;
 import com.align.domain.config.TokenType;
-import com.align.domain.dto.UserDto;
-import com.align.domain.repository.UserRepo;
 import com.align.infrastructure.exception.BusinessException;
-import com.align.infrastructure.po.UserPo;
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
-import jakarta.annotation.Resource;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+@Component
+@Data
 public class UserEntity {
 
-    private UserEntity() {}
-    @Resource
-    private static UserRepo userRepo;
+    private static String name;
 
-    @Resource
-    private static JwtConfigProperties jwtConfigProperties;
-    public static Boolean isUserAccountExists(String username) {
-        ArrayList<String> userList = new ArrayList<>();
-        userList.add(username);
-        List<UserDetailVo> userAccountList = userRepo.getAccount(userList);
-        return !userAccountList.isEmpty();
-    }
-
-    public static void registerUser(UserDto account) {
-        UserPo userAccount = new UserPo();
-        userAccount.setUsername(account.getAccountName());
-        userAccount.setEmail(account.getEmail());
-        userAccount.setPassword(encryptPassword(account.getPassword()));
-        userAccount.setToken(generateToken(account.getAccountName(), TokenType.ACCESS_TOKEN, null));
-        userAccount.setRefreshToken(generateToken(account.getAccountName(), TokenType.REFRESH_TOKEN, null));
-        userRepo.insertAccount(userAccount);
-    }
-
+    private UserEntity(){}
     public static Boolean verifyPasswordRule(String password, String confirmedPassword) {
 
         if(!Objects.equals(password, confirmedPassword)) {
@@ -53,12 +34,13 @@ public class UserEntity {
         confirmedPasswordResult = confirmedPassword.matches(pattern);
         return passwordResult && confirmedPasswordResult;
     }
-
     public static String generateToken(String userId, TokenType tokenType, Map<String, Object> params) {
+        String accessTokenSecret = "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDR7";
+        String refreshTokenSecret = "9dr6vsnXbZ/JjR3P07fu5m+Ysj0cArxlVVcJxNeDTMPswoICjN4Ho6RhXh";
         long currentTimeInMillis = System.currentTimeMillis();
-        long expires = jwtConfigProperties.getAccessTokenExpireTime() * 60 * 1000; // 30 minutes
-        expires = tokenType==TokenType.ACCESS_TOKEN ? expires : expires * 2L;
-        String secret = tokenType==TokenType.ACCESS_TOKEN ? jwtConfigProperties.getAccessSecret() : jwtConfigProperties.getRefreshSecret();
+        long expires = tokenType==TokenType.ACCESS_TOKEN ?
+                30 * 60 * 1000 : 40 * 60 * 1000;
+        String secret = tokenType==TokenType.ACCESS_TOKEN ? accessTokenSecret : refreshTokenSecret;
         Date expireDate = new Date(currentTimeInMillis + expires);
 
         return JWT.create().withAudience(userId)
@@ -68,7 +50,6 @@ public class UserEntity {
                 .withExpiresAt(expireDate)
                 .sign(Algorithm.HMAC256(secret));
     }
-
     public static String encryptPassword(String password){
         String salt= UUID.randomUUID().toString().replace("-","");
         String finalPassword= DigestUtils.md5DigestAsHex((salt+password).getBytes(StandardCharsets.UTF_8));
@@ -87,5 +68,18 @@ public class UserEntity {
         String storedFinalPassword = storedPasswordArray[1];
         String finalPassword = DigestUtils.md5DigestAsHex((salt + password).getBytes(StandardCharsets.UTF_8));
         return storedFinalPassword.equals(finalPassword);
+    }
+
+    public static void verifyToken(String token, String secret) {
+        if (org.apache.commons.lang3.StringUtils.isBlank(token) || !token.startsWith("Bearer")) {
+            throw new BusinessException(500, "Token is not correctly formatted");
+        }
+        token = token.substring(7);
+        try {
+            JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(secret)).build();
+            jwtVerifier.verify(token);
+        } catch (JWTVerificationException e) {
+            throw new BusinessException(500, "Verify access token failed:" + e.getMessage());
+        }
     }
 }

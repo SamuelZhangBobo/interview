@@ -5,8 +5,6 @@
         username,
         email,
         password,
-        salt,
-        secret,
         token,
         refreshToken,
         create_user_id,
@@ -42,4 +40,17 @@
             #{account.updatedTime}
         )
     </insert>
+
+    <update id="updateAccount" parameterType="com.align.infrastructure.po.UserPo">
+        update align.t_user
+        <set>
+            <if test="account.username!= null">
+                token = #{account.username},
+            </if>
+            <if test="account.username!= null">
+                refreshToken = #{account.refreshToken},
+            </if>
+        </set>
+        where username = #{account.username}
+    </update>
 </mapper>
