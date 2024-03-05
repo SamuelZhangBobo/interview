@@ -1,0 +1,56 @@
+server:
+  port: 8089
+  servlet:
+    context-path: /moikiitos
+
+spring:
+  # dataSource config sqlserver
+  datasource:
+    master:
+      jdbc-url: jdbc:sqlserver://10.206.1.135:1433;DatabaseName=mal_lms_db;serverTimezone=UTC;trustServerCertificate=true;
+      username: SA
+      password: cYEtbUj-5tPGekmT__
+      driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+      auto-commit: true
+      connection-test-query: SELECT 1
+      connection-timeout: 30000 # 30-seconds
+      idle-timeout: 10000 # 600-seconds
+      max-lifetime: 1800000 # 30-minutes
+      maximum-pool-size: 20
+      minimum-idle: 10
+      pool-name: HikariPool-Master
+    slave:
+      jdbc-url: jdbc:sqlserver://10.206.1.135:1433;DatabaseName=mal_lms_db;serverTimezone=UTC;trustServerCertificate=true;
+      username: SA
+      password: cYEtbUj-5tPGekmT__
+      driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+      auto-commit: true
+      connection-test-query: SELECT 1
+      connection-timeout: 30000 # 30-seconds
+      idle-timeout: 10000 # 600-seconds
+      max-lifetime: 1800000 # 30-minutes
+      maximum-pool-size: 20
+      minimum-idle: 10
+      pool-name: HikariPool-Slave
+
+# mybatis config
+mybatis:
+  configuration-properties: {tSchema: align}
+  mapper-locations: classpath*:mapper/**/*Mapper.xml
+  type-aliases-package: com.align.infrastructure.po
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+
+# swagger enable or disable
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    enable: true
+knife4j:
+  enable: true
+
+# log config
+logging:
+  config: classpath:logback.xml

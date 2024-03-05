@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.align.infrastructure.repository.mapper.UserMapper">
+    <sql id="UserTableColumns">
+        username,
+        email,
+        password,
+        salt,
+        secret,
+        token,
+        refreshToken,
+        create_user_id,
+        created_time,
+        update_user_id,
+        updated_time
+    </sql>
+
+    <select id="getAccount" parameterType="string" resultType="com.align.infrastructure.po.UserPo">
+        select
+            <include refid="UserTableColumns"/>
+        from
+            align.t_user
+        where
+            userName = #{userName}
+    </select>
+
+    <insert id="insertAccount" parameterType="com.align.infrastructure.po.UserPo">
+        insert into align.t_user
+        (
+            <include refid="UserTableColumns"/>
+        )
+        VALUES
+        (
+            #{account.username},
+            #{account.email},
+            #{account.password},
+            #{account.token},
+            #{account.refreshToken},
+            #{account.createUserId},
+            #{account.createdTime},
+            #{account.updateUserId},
+            #{account.updatedTime}
+        )
+    </insert>
+</mapper>

@@ -22,3 +22,38 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+target/
+sys-setting/target
+### eclipse ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+./out
+
+### NetBeans ###
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+bin/
+doc/
+.DS_Store
+
+###
+tmp/
+META-INF/
+!scripts/
+scripts/run.log
+scripts/start-1.0.0-SNAPSHOT.jar
+scripts/tmp
