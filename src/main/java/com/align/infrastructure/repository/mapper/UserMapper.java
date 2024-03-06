@@ -12,6 +12,5 @@ public interface UserMapper {
     void updateAccount(@Param("account") UserPo account);
     void refreshToken(@Param("userName") String userName,
                      @Param("token") String token,
-                     @Param("refreshToken") String refreshToken,
-                     @Param("salt") String salt);
+                     @Param("refreshToken") String refreshToken);
 }

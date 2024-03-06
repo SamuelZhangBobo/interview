@@ -17,9 +17,7 @@ public class TokenValidationInterceptor implements HandlerInterceptor {
     private String refreshTokenSecret;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        System.out.println("Before processing");
         validateToken(request);
-        System.out.println("After processing");
         return true;
     }
 
@@ -27,7 +25,6 @@ public class TokenValidationInterceptor implements HandlerInterceptor {
 
         String token = request.getHeader("Authorization");
         try{
-            System.out.println("During processing");
             UserEntity.verifyToken(token, accessTokenSecret);
         }
         catch(BusinessException accessException){

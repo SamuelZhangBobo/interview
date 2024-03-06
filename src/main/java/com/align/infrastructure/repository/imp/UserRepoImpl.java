@@ -1,14 +1,10 @@
 package com.align.infrastructure.repository.imp;
 
-import com.align.controller.vo.UserDetailVo;
 import com.align.domain.repository.UserRepo;
 import com.align.infrastructure.po.UserPo;
 import com.align.infrastructure.repository.mapper.UserMapper;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-
 
 @Service
 public class UserRepoImpl implements UserRepo {
@@ -32,7 +28,7 @@ public class UserRepoImpl implements UserRepo {
     }
 
     @Override
-    public void refreshToken(String userName, String token, String refreshToken, String salt) {
-        userMapper.refreshToken(userName, token, refreshToken, salt);
+    public void refreshToken(String userName, String token, String refreshToken) {
+        userMapper.refreshToken(userName, token, refreshToken);
     }
 }

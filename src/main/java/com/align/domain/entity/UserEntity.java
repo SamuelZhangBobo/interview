@@ -1,5 +1,6 @@
 package com.align.domain.entity;
 
+import com.align.domain.config.TokenProperties;
 import com.align.domain.config.TokenType;
 import com.align.infrastructure.exception.BusinessException;
 import com.auth0.jwt.JWT;
@@ -7,6 +8,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
@@ -17,10 +19,7 @@ import java.util.*;
 @Component
 @Data
 public class UserEntity {
-
-    private static String name;
-
-    private UserEntity(){}
+    private UserEntity() {}
     public static Boolean verifyPasswordRule(String password, String confirmedPassword) {
 
         if(!Objects.equals(password, confirmedPassword)) {
@@ -33,12 +32,14 @@ public class UserEntity {
         confirmedPasswordResult = confirmedPassword.matches(pattern);
         return passwordResult && confirmedPasswordResult;
     }
-    public static String generateToken(String userId, TokenType tokenType, Map<String, Object> params) {
-        String accessTokenSecret = "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDR7";
-        String refreshTokenSecret = "9dr6vsnXbZ/JjR3P07fu5m+Ysj0cArxlVVcJxNeDTMPswoICjN4Ho6RhXh";
+    public static String generateToken(String userId, TokenType tokenType, Map<String, Object> params, TokenProperties tokenProperties) {
+        String accessTokenSecret = tokenProperties.getAccessTokenSecret();
+        String refreshTokenSecret = tokenProperties.getRefreshTokenSecret();
+        long accessTokenExpires = tokenProperties.getAccessTokenExpiration();
+        long refreshTokenExpires = tokenProperties.getRefreshTokenExpiration();
         long currentTimeInMillis = System.currentTimeMillis();
         long expires = tokenType==TokenType.ACCESS_TOKEN ?
-                30 * 60 * 1000 : 40 * 60 * 1000;
+                accessTokenExpires * 60 * 1000 : refreshTokenExpires * 60 * 1000;
         String secret = tokenType==TokenType.ACCESS_TOKEN ? accessTokenSecret : refreshTokenSecret;
         Date expireDate = new Date(currentTimeInMillis + expires);
 
