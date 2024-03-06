@@ -23,12 +23,11 @@ CREATE TABLE align.[t_follow] (
 )
 GO
 
-CREATE TABLE align.[t_posts] (
-    post_id INT PRIMARY KEY,
-    user_id varchar(64) not null,
-    post_user_id varchar(64) not null,
-    content TEXT,
-    post_time TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES align.[t_user](username)
+CREATE TABLE align.[t_feeds] (
+    feed_id varchar(255) PRIMARY KEY not null,
+    feed_user_id varchar(64) not null,
+    content varchar(MAX) COLLATE Chinese_PRC_CI_AS,
+    post_time varchar(64) null,
+    FOREIGN KEY (feed_user_id) REFERENCES align.[t_user](username)
 )
 GO

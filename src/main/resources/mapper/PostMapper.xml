@@ -1,5 +1,32 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.align.infrastructure.repository.mapper.PostMapper">
+    <insert id="postFeed" parameterType="com.align.domain.dto.FeedDto">
+        insert into align.t_feeds
+        ( feed_id, feed_user_id, content, post_time)
+        VALUES
+        (
+        NEWID(),
+        #{feed.accountName},
+        #{feed.content},
+        #{feed.postTime}
+        )
+    </insert>
 
+    <select id="getFeedList" parameterType="string" resultType="com.align.controller.vo.PostDetailVo">
+        select account.username, feeds.Content, feeds.post_time
+            from
+            align.t_user as account,
+            align.t_follow as follows,
+            align.t_feeds as feeds
+            where
+            follows.follower_id = #{userId} and
+            follows.followed_id = account.Username and
+            account.Username = feeds.feed_user_id
+          union
+        select feed_user_id, Content, post_time
+            from
+            align.t_feeds
+            where feed_user_id = #{userId};
+    </select>
 </mapper>

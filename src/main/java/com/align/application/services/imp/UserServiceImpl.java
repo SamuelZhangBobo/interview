@@ -47,7 +47,14 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public UserDetailVo login(UserDto login) {
-        UserPo userPo = userRepo.getAccount(login.getAccountName());
+        EmailValidator validator = EmailValidator.getInstance();
+        UserPo userPo;
+        String userID = login.getAccountName();
+        if (validator.isValid(userID)){
+            userPo = userRepo.getAccountByEmail(userID);
+        } else {
+            userPo = userRepo.getAccount(userID);
+        }
         if(userPo == null){
             throw new BusinessException(500, "User does not exist");
         } else if (!UserEntity.validatePassword(login.getPassword(), userPo.getPassword())) {
