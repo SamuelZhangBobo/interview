@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 public interface UserMapper {
 
     UserPo getAccount(@Param("userName") String userName);
+    UserPo getAccountByEmail(@Param("emailAddress") String emailAddress);
     void insertAccount(@Param("account") UserPo account);
     void updateAccount(@Param("account") UserPo account);
     void refreshToken(@Param("userName") String userName,

@@ -11,6 +11,7 @@ import com.align.infrastructure.exception.BusinessException;
 import com.align.infrastructure.po.UserPo;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -23,8 +24,8 @@ public class UserServiceImpl implements UserService {
     private TokenProperties tokenProperties;
     @Override
     public Boolean register(UserDto registry) {
-        UserPo userAccount = userRepo.getAccount(registry.getAccountName());
-        if(userAccount != null) {
+        UserPo userPo = userRepo.getAccount(registry.getAccountName());
+        if(userPo != null) {
             throw new BusinessException(500, "User already registered");
         } else if(Boolean.FALSE.equals(UserEntity.verifyPasswordRule(registry.getPassword(), registry.getConfirmedPassword()))) {
             String passwordRule = """
@@ -42,31 +43,67 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public UserDetailVo login(UserDto login) {
-        UserPo userAccount = userRepo.getAccount(login.getAccountName());
-        if(userAccount == null){
+        UserPo userPo = userRepo.getAccount(login.getAccountName());
+        if(userPo == null){
             throw new BusinessException(500, "User does not exist");
-        } else if (!UserEntity.validatePassword(login.getPassword(), userAccount.getPassword())) {
+        } else if (!UserEntity.validatePassword(login.getPassword(), userPo.getPassword())) {
             throw new BusinessException(500, "Incorrect password");
         }else{
-            userAccount.setToken(UserEntity.generateToken(userAccount.getUsername(), TokenType.ACCESS_TOKEN, null, tokenProperties));
-            userAccount.setRefreshToken(UserEntity.generateToken(userAccount.getUsername(), TokenType.REFRESH_TOKEN, null, tokenProperties));
-            userRepo.updateAccount(userAccount);
+            updateToken(userPo);
         }
         UserDetailVo userDetail = new UserDetailVo();
-        userDetail.setUsername(userAccount.getUsername());
-        userDetail.setEmail(userAccount.getEmail());
-        userDetail.setToken(userAccount.getToken());
-        userDetail.setRefreshToken(userAccount.getRefreshToken());
+        userDetail.setUsername(userPo.getUsername());
+        userDetail.setEmail(userPo.getEmail());
+        userDetail.setToken(userPo.getToken());
+        userDetail.setRefreshToken(userPo.getRefreshToken());
         return userDetail;
     }
 
+    @Override
+    public UserDetailVo refreshLogin(UserDto refreshToken) {
+        UserPo userPo = userRepo.getAccount(refreshToken.getAccountName());
+        updateToken(userPo);
+        UserDetailVo userDetail = new UserDetailVo();
+        userDetail.setUsername(userPo.getUsername());
+        userDetail.setEmail(userPo.getEmail());
+        userDetail.setToken(userPo.getToken());
+        userDetail.setRefreshToken(userPo.getRefreshToken());
+        return userDetail;
+    }
+
+    @Override
+    public UserDetailVo findUser(String userID) {
+        if (userID.isBlank()) {
+            throw new BusinessException(500, "Missing userID ID");
+        }
+        EmailValidator validator = EmailValidator.getInstance();
+        UserPo userPo;
+        if (validator.isValid(userID)){
+            userPo = userRepo.getAccountByEmail(userID);
+        } else {
+            userPo = userRepo.getAccount(userID);
+        }
+        UserDetailVo userDetail = new UserDetailVo();
+        if (userPo != null) {
+            userDetail.setUsername(userPo.getUsername());
+            userDetail.setEmail(userPo.getEmail());
+        }
+        return userDetail;
+
+    }
+
+    private void updateToken(UserPo userPo){
+        userPo.setToken(UserEntity.generateToken(userPo.getUsername(), TokenType.ACCESS_TOKEN, null, tokenProperties));
+        userPo.setRefreshToken(UserEntity.generateToken(userPo.getUsername(), TokenType.REFRESH_TOKEN, null, tokenProperties));
+        userRepo.updateAccount(userPo);
+    }
     private void registerUser(UserDto account) {
-        UserPo userAccount = new UserPo();
-        userAccount.setUsername(account.getAccountName());
-        userAccount.setEmail(account.getEmail());
-        userAccount.setPassword(UserEntity.encryptPassword(account.getPassword()));
-        userAccount.setToken(UserEntity.generateToken(account.getAccountName(), TokenType.ACCESS_TOKEN, null, tokenProperties));
-        userAccount.setRefreshToken(UserEntity.generateToken(account.getAccountName(), TokenType.REFRESH_TOKEN, null, tokenProperties));
-        userRepo.insertAccount(userAccount);
+        UserPo userPo = new UserPo();
+        userPo.setUsername(account.getAccountName());
+        userPo.setEmail(account.getEmail());
+        userPo.setPassword(UserEntity.encryptPassword(account.getPassword()));
+        userPo.setToken(UserEntity.generateToken(account.getAccountName(), TokenType.ACCESS_TOKEN, null, tokenProperties));
+        userPo.setRefreshToken(UserEntity.generateToken(account.getAccountName(), TokenType.REFRESH_TOKEN, null, tokenProperties));
+        userRepo.insertAccount(userPo);
     }
 }

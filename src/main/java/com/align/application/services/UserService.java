@@ -8,4 +8,8 @@ public interface UserService {
     Boolean register(UserDto registry);
 
     UserDetailVo login(UserDto login);
+
+    UserDetailVo refreshLogin(UserDto refreshToken);
+
+    UserDetailVo findUser(String userID);
 }

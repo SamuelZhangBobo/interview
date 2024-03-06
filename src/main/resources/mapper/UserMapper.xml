@@ -22,6 +22,15 @@
             userName = #{userName}
     </select>
 
+    <select id="getAccountByEmail" parameterType="string" resultType="com.align.infrastructure.po.UserPo">
+        select
+        <include refid="UserTableColumns"/>
+        from
+        align.t_user
+        where
+        email = #{emailAddress}
+    </select>
+
     <insert id="insertAccount" parameterType="com.align.infrastructure.po.UserPo">
         insert into align.t_user
         (
@@ -44,10 +53,10 @@
     <update id="updateAccount" parameterType="com.align.infrastructure.po.UserPo">
         update align.t_user
         <set>
-            <if test="account.username!= null">
-                token = #{account.username},
+            <if test="account.token!= null">
+                token = #{account.token},
             </if>
-            <if test="account.username!= null">
+            <if test="account.refreshToken!= null">
                 refreshToken = #{account.refreshToken},
             </if>
         </set>

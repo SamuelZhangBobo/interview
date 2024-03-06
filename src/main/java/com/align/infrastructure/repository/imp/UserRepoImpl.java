@@ -18,6 +18,9 @@ public class UserRepoImpl implements UserRepo {
     }
 
     @Override
+    public UserPo getAccountByEmail(String userEmail) {return userMapper.getAccountByEmail(userEmail);}
+
+    @Override
     public void insertAccount(UserPo account) {
         userMapper.insertAccount(account);
     }

@@ -10,10 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -35,5 +32,19 @@ public class UserController {
     public GlobalResponse<UserDetailVo> login(@RequestBody @Valid UserDto login) {
         UserDetailVo response = userService.login(login);
         return GlobalResponse.response(200, response, "Login successfully");
+    }
+
+    @PostMapping("/refresh")
+    @Operation(summary = "Refresh user login with refresh token")
+    public GlobalResponse<UserDetailVo> refreshLogin(@RequestBody @Valid UserDto refreshToken) {
+        UserDetailVo response = userService.refreshLogin(refreshToken);
+        return GlobalResponse.response(200, response, "Refresh login successfully");
+    }
+
+    @GetMapping("/retrieve")
+    @Operation(summary = "Search user by username or email")
+    public GlobalResponse<UserDetailVo> findUser(@RequestBody @Valid UserDto userAccount) {
+        UserDetailVo response = userService.findUser(userAccount.getAccountName());
+        return GlobalResponse.response(200, response, "Retrieve user successfully");
     }
 }
