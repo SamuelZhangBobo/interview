@@ -1,6 +1,7 @@
 package com.align.infrastructure.datasource;
 
 
+import com.align.infrastructure.annotation.DataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -20,7 +21,7 @@ public class DynamicDataSourceAspect {
     /**
      * Pointcut
      */
-    @Pointcut("@annotation(com.align.infrastructure.datasource.DataSource)")
+    @Pointcut("@annotation(com.align.infrastructure.annotation.DataSource)")
     public void dataSourcePointCut() {}
 
     @Around("dataSourcePointCut()")

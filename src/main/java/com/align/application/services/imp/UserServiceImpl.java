@@ -12,9 +12,6 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Slf4j
 @Service
 public class UserServiceImpl implements UserService {
@@ -25,7 +22,7 @@ public class UserServiceImpl implements UserService {
         UserPo userAccount = userRepo.getAccount(registry.getAccountName());
         if(userAccount != null) {
             throw new BusinessException(500, "User already registered");
-        } else if(Boolean.TRUE.equals(UserEntity.verifyPasswordRule(registry.getPassword(), registry.getConfirmedPassword()))) {
+        } else if(Boolean.FALSE.equals(UserEntity.verifyPasswordRule(registry.getPassword(), registry.getConfirmedPassword()))) {
             String passwordRule = """
                     The password must be a minimum of 8 characters
                     The password must contain at least one uppercase letter

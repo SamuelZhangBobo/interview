@@ -1,4 +1,4 @@
-package com.align.infrastructure.datasource;
+package com.align.infrastructure.annotation;
 
 
 import java.lang.annotation.*;
