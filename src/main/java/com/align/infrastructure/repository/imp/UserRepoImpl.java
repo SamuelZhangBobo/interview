@@ -6,7 +6,6 @@ import com.align.domain.repository.UserRepo;
 import com.align.infrastructure.po.UserPo;
 import com.align.infrastructure.repository.mapper.UserMapper;
 import jakarta.annotation.Resource;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
