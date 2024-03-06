@@ -4,6 +4,7 @@ import com.align.application.services.UserService;
 import com.align.controller.vo.UserDetailVo;
 import com.align.domain.config.TokenProperties;
 import com.align.domain.config.TokenType;
+import com.align.domain.dto.FollowDto;
 import com.align.domain.dto.UserDto;
 import com.align.domain.entity.UserEntity;
 import com.align.domain.repository.UserRepo;
@@ -13,6 +14,9 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -90,6 +94,40 @@ public class UserServiceImpl implements UserService {
         }
         return userDetail;
 
+    }
+
+    @Override
+    public Boolean followUsers(FollowDto follow){
+        if (!follow.getFollowed().isEmpty()) {
+            userRepo.followUsers(follow);
+        }
+        return true;
+    }
+
+    @Override
+    public Boolean unfollowUsers(FollowDto unfollow){
+        if (!unfollow.getFollowed().isEmpty()) {
+            userRepo.unfollowUsers(unfollow);
+        }
+        return true;
+    }
+
+    @Override
+    public List<UserDetailVo> listFollowingUsers(String userID){
+        List<UserDetailVo> userDetail = new ArrayList<>();
+        if (!userID.isEmpty()) {
+            userDetail = userRepo.getFollowings(userID);
+        }
+        return userDetail;
+    }
+
+    @Override
+    public List<UserDetailVo> listFollowedUsers(String userID){
+        List<UserDetailVo> userDetail = new ArrayList<>();
+        if (!userID.isEmpty()) {
+            userDetail = userRepo.getFollowers(userID);
+        }
+        return userDetail;
     }
 
     private void updateToken(UserPo userPo){

@@ -31,6 +31,24 @@
         email = #{emailAddress}
     </select>
 
+    <select id="getFollowings" parameterType="string" resultType="com.align.controller.vo.UserDetailVo">
+        select account.Username, account.Email
+        from
+        align.t_user as account, align.t_follow as follows
+        where
+        follows.follower_id = #{userId} and
+        follows.followed_id = account.username
+    </select>
+
+    <select id="getFollowers" parameterType="string" resultType="com.align.controller.vo.UserDetailVo">
+        select account.Username, account.Email
+        from
+        align.t_user as account, align.t_follow as follows
+        where
+        follows.followed_id = #{userId} and
+        follows.follower_id = account.username
+    </select>
+
     <insert id="insertAccount" parameterType="com.align.infrastructure.po.UserPo">
         insert into align.t_user
         (
@@ -49,6 +67,20 @@
             #{account.updatedTime}
         )
     </insert>
+
+    <insert id="followUsers">
+        <foreach collection="followed" item="value">
+            INSERT INTO align.t_follow (follower_id, followed_id) values
+            (#{follower}, #{value})
+        </foreach>
+    </insert>
+
+    <delete id="unfollowUsers">
+        <foreach collection="unfollowed" item="value">
+            DELETE FROM align.t_follow
+            where follower_id = #{follower} and followed_id = #{value}
+        </foreach>
+    </delete>
 
     <update id="updateAccount" parameterType="com.align.infrastructure.po.UserPo">
         update align.t_user

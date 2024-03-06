@@ -1,10 +1,15 @@
 package com.align.infrastructure.repository.imp;
 
+import com.align.controller.vo.UserDetailVo;
+import com.align.domain.dto.FollowDto;
 import com.align.domain.repository.UserRepo;
 import com.align.infrastructure.po.UserPo;
 import com.align.infrastructure.repository.mapper.UserMapper;
 import jakarta.annotation.Resource;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserRepoImpl implements UserRepo {
@@ -31,7 +36,19 @@ public class UserRepoImpl implements UserRepo {
     }
 
     @Override
-    public void refreshToken(String userName, String token, String refreshToken) {
-        userMapper.refreshToken(userName, token, refreshToken);
+    public void followUsers(FollowDto followMap) {
+        userMapper.followUsers(followMap.getFollower(), followMap.getFollowed());
+    }
+    @Override
+    public void unfollowUsers(FollowDto unfollowMap) {
+        userMapper.unfollowUsers(unfollowMap.getFollower(), unfollowMap.getFollowed());
+    }
+    @Override
+    public List<UserDetailVo> getFollowings(String userId){
+        return userMapper.getFollowings(userId);
+    }
+    @Override
+    public List<UserDetailVo> getFollowers(String userId){
+       return userMapper.getFollowers(userId);
     }
 }

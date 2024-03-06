@@ -1,6 +1,7 @@
 package com.align.controller;
 
 import com.align.application.services.UserService;
+import com.align.domain.dto.FollowDto;
 import com.align.infrastructure.response.GlobalResponse;
 import com.align.controller.vo.UserDetailVo;
 import com.align.domain.dto.UserDto;
@@ -11,6 +12,8 @@ import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -46,5 +49,33 @@ public class UserController {
     public GlobalResponse<UserDetailVo> findUser(@RequestBody @Valid UserDto userAccount) {
         UserDetailVo response = userService.findUser(userAccount.getAccountName());
         return GlobalResponse.response(200, response, "Retrieve user successfully");
+    }
+
+    @PostMapping("/follow")
+    @Operation(summary = "Follow users")
+    public GlobalResponse<Boolean> followUsers(@RequestBody @Valid FollowDto follow) {
+        Boolean response = userService.followUsers(follow);
+        return GlobalResponse.response(200, response, "Follow users successfully");
+    }
+
+    @PostMapping("/unfollow")
+    @Operation(summary = "Unfollow users")
+    public GlobalResponse<Boolean> unfollowUsers(@RequestBody @Valid FollowDto unfollow) {
+        Boolean response = userService.unfollowUsers(unfollow);
+        return GlobalResponse.response(200, response, "Unfollow users successfully");
+    }
+
+    @GetMapping("/following")
+    @Operation(summary = "List the users I am following")
+    public GlobalResponse<List<UserDetailVo>> followingUsers(@RequestBody @Valid UserDto userAccount) {
+        List<UserDetailVo> response = userService.listFollowingUsers(userAccount.getAccountName());
+        return GlobalResponse.response(200, response, "List following users successfully");
+    }
+
+    @GetMapping("/followed")
+    @Operation(summary = "List the users who followed me")
+    public GlobalResponse<List<UserDetailVo>> followedUsers(@RequestBody @Valid UserDto userAccount) {
+        List<UserDetailVo> response = userService.listFollowedUsers(userAccount.getAccountName());
+        return GlobalResponse.response(200, response, "List followed users successfully");
     }
 }
