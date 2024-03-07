@@ -2,10 +2,8 @@ package com.align.application.services.imp;
 
 import com.align.application.services.PostService;
 import com.align.controller.vo.PostDetailVo;
-import com.align.controller.vo.UserDetailVo;
 import com.align.domain.dto.FeedDto;
 import com.align.domain.repository.PostRepo;
-import com.align.infrastructure.exception.BusinessException;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

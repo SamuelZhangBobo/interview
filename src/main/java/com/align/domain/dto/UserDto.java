@@ -10,7 +10,7 @@ import lombok.Data;
 public class UserDto {
     @NotBlank
     @Size(max = 50)
-    @Schema(description = "UserName or Email", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "UserName or Email for login", requiredMode = Schema.RequiredMode.REQUIRED)
     private String accountName;
 
     @Email

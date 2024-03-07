@@ -9,7 +9,7 @@ import lombok.Data;
 public class FeedDto {
     @NotBlank
     @Size(max = 50)
-    @Schema(description = "UserName or Email", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "UserName", requiredMode = Schema.RequiredMode.REQUIRED)
     private String accountName;
 
     private String content;
