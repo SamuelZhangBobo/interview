@@ -23,7 +23,6 @@ public class InterceptorConfig implements WebMvcConfigurer {
                         "/v3/**",
                         "/**/login",
                         "/**/register",
-                        "/**/refreshToken",
                         "/swagger-ui/**");
         WebMvcConfigurer.super.addInterceptors(registry);
     }

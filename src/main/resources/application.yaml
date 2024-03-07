@@ -7,9 +7,9 @@ spring:
   # dataSource config sqlserver
   datasource:
     master:
-      jdbc-url: jdbc:sqlserver://10.206.1.135:1433;DatabaseName=mal_lms_db;serverTimezone=UTC;trustServerCertificate=true;
-      username: SA
-      password: cYEtbUj-5tPGekmT__
+      jdbc-url: jdbc:sqlserver://<DB Hostname>:1433;DatabaseName=<Database Name>;serverTimezone=UTC;trustServerCertificate=true;
+      username: <username>
+      password: <password>
       driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
       auto-commit: true
       connection-test-query: SELECT 1
@@ -20,9 +20,9 @@ spring:
       minimum-idle: 10
       pool-name: HikariPool-Master
     slave:
-      jdbc-url: jdbc:sqlserver://10.206.1.135:1433;DatabaseName=mal_lms_db;serverTimezone=UTC;trustServerCertificate=true;
-      username: SA
-      password: cYEtbUj-5tPGekmT__
+      jdbc-url: jdbc:sqlserver://<DB Hostname>:1433;DatabaseName=<Database Name>;serverTimezone=UTC;trustServerCertificate=true;
+      username: <username>
+      password: <password>
       driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
       auto-commit: true
       connection-test-query: SELECT 1
