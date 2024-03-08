@@ -44,7 +44,7 @@ public class UserController {
         return GlobalResponse.response(200, response, "Refresh login successfully");
     }
 
-    @GetMapping("/retrieve")
+    @PostMapping("/retrieve")
     @Operation(summary = "Search user by username or email")
     public GlobalResponse<UserDetailVo> findUser(@RequestBody @Valid UserDto userAccount) {
         UserDetailVo response = userService.findUser(userAccount.getAccountName());
@@ -65,14 +65,14 @@ public class UserController {
         return GlobalResponse.response(200, response, "Unfollow users successfully");
     }
 
-    @GetMapping("/following")
+    @PostMapping("/following")
     @Operation(summary = "List the users I am following")
     public GlobalResponse<List<UserDetailVo>> followingUsers(@RequestBody @Valid UserDto userAccount) {
         List<UserDetailVo> response = userService.listFollowingUsers(userAccount.getAccountName());
         return GlobalResponse.response(200, response, "List following users successfully");
     }
 
-    @GetMapping("/followed")
+    @PostMapping("/followed")
     @Operation(summary = "List the users who followed me")
     public GlobalResponse<List<UserDetailVo>> followedUsers(@RequestBody @Valid UserDto userAccount) {
         List<UserDetailVo> response = userService.listFollowedUsers(userAccount.getAccountName());

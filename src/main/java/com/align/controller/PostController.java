@@ -23,7 +23,7 @@ public class PostController {
     @Resource
     private PostService postService;
 
-    @GetMapping("/feed-list")
+    @PostMapping("/feed-list")
     @Operation(summary = "Get my feed list")
     public GlobalResponse<List<PostDetailVo>> feedList(@RequestBody @Valid UserDto account) throws BusinessException {
         List<PostDetailVo> response = postService.getFeedList(account.getAccountName());
