@@ -16,6 +16,7 @@ public class UserDto {
     @Email
     private String email;
 
+    @Schema(description = "Required for login", requiredMode = Schema.RequiredMode.AUTO)
     private String password;
 
     private String confirmedPassword;
