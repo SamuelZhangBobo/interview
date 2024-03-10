@@ -34,7 +34,7 @@ public class DynamicDataSourceAspect {
         if (ds == null) {
             // if there is no annotation on the method, use master database.
             DynamicDataSource.setDataSourceKey("master");
-            log.info("set default datasource is " + "slave");
+            log.info("set default datasource is " + "master");
         } else {
             //if the annotation on the method,use the value of annotation
             DynamicDataSource.setDataSourceKey(ds.value());
